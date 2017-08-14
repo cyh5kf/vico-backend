@@ -1,0 +1,46 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch via NPM-dev",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "protocol": "auto",
+            "runtimeExecutable": "npm",
+            "windows": {
+                "runtimeExecutable": "npm.cmd"
+            },
+            "runtimeArgs": [
+                "run",
+                "node-vscode-debug"
+            ],
+            "port": 5858
+        }, 
+        {
+            "name": "Launch via NPM-build",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "protocol": "auto",
+            "runtimeExecutable": "npm",
+            "windows": {
+                "runtimeExecutable": "npm.cmd"
+            },
+            "runtimeArgs": [
+                "run",
+                "node-vscode-debug-build"
+            ],
+            "port": 5858
+        }, 
+        {
+            "name": "Attach to Process",
+            "type": "node",
+            "protocol": "auto",
+            "request": "attach",
+            "timeout": 10000,
+            "restart": true,
+            "port": 5858
+        }
+    ]
+}
