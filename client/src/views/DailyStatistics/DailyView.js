@@ -45,13 +45,13 @@ export default class DailyView extends React.Component {
 
     render() {
         const { actions, store } = this.props;
-        const {spinLoading, queryDailyData} = store;
+        const {spinLoading, queryDailyData, isOpenDialog} = store;
         return (
             <div className="dailyView">
                 <Button type="primary" style={{ marginRight: '20px'}} onClick={() => { actions.handleToggleDialog(true) }}>Query Filter</Button>
                 <Button type="primary" loading={this.state.btnLoading} onClick={() => { this.handleQueryAll() }}>Query All (one week)</Button>
                 <div className="clear20"></div>
-                <QueryInfoDialog store={store} actions={actions} />
+                {isOpenDialog? <QueryInfoDialog store={store} actions={actions} />: null}
                 {
                     !queryDailyData? (
                         <Spin style={{width: '100%', height: '100%', marginTop: '100'}} size="large" tip="Loading..." spinning={spinLoading} ></Spin>

@@ -55,7 +55,7 @@ export default class RealtimeRttView extends React.Component {
 
     render() {
         const { actions, store } = this.props;
-        const { queryRealtimeRttData, spinLoading, formValues } = store;
+        const { queryRealtimeRttData, spinLoading, formValues, isOpenDialog } = store;
         
         return (
             <div className="realtimeRttView">
@@ -63,7 +63,7 @@ export default class RealtimeRttView extends React.Component {
                 {this.renderSearchSearchOptions()}
                 <Button type="primary" loading={this.state.btnLoading} onClick={() => { this.handleQueryAll() }}>Query All (one week)</Button>
                 <div className="clear20"></div>
-                <QueryInfoDialog store={store} actions={actions} />
+                { isOpenDialog? <QueryInfoDialog store={store} actions={actions} />: null }
                 {
                     !queryRealtimeRttData? (
                         <Spin style={{width: '100%', height: '100%', marginTop: '100'}} size="large" tip="Loading..." spinning={spinLoading} ></Spin>

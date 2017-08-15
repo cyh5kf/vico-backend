@@ -20,6 +20,13 @@ class TheForm extends React.Component {
     componentDidMount() {
         var { formValues } = this.props.store;
         if(formValues) {
+            var currentTime = moment().format('HH:mm:ss');
+            var preDate = moment(formValues.range_time_picker[0]).format("YYYY-MM-DD");
+            var nextDate = moment(formValues.range_time_picker[1]).format("YYYY-MM-DD");
+            var preTime = `${preDate} ${currentTime}`;
+            var nextTime = `${nextDate} ${currentTime}`;
+            var range_time_picker = [moment(preTime), moment(nextTime)];
+            formValues.range_time_picker = range_time_picker;
             this.props.form.setFieldsValue(formValues);
         }
     }
@@ -140,9 +147,6 @@ export default class QueryInfoDialog extends React.Component {
     render() {
         var { actions, store } = this.props;
         var visible = store.isOpenDialog;
-        if (!visible) {
-            return null;
-        }
 
         return (
             <Modal

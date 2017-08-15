@@ -179,9 +179,6 @@ export default class QueryInfoDialog extends React.Component {
     render() {
         var { actions, store } = this.props;
         var visible = store.isOpenDialog;
-        if (!visible) {
-            return null;
-        }
 
         return (
             <Modal
