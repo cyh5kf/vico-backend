@@ -12,12 +12,12 @@ export const getXTimeData = (time) => {
          minTimeFormat1 = moment(minTime1).format("YYYY-MM-DD HH:mm"),
          minTimeFormat2 = moment(minTime2).format("YYYY-MM-DD HH:mm"),
          getMin = moment(minTimeFormat1).minutes(),  //取开始时间分钟数
-         getS = getMin % 10,
+         getS = getMin % 10, //取开始时间秒数
          newMinTimeFormat1 = null,
          newMinTime1 = null,
          newMinTimeFormat2 = null,
          newMinTime2 = null;
-    if(timeDuration <= 2) {
+    if(timeDuration <= 2) { //选择时间段小于两天，分钟取整十分钟
         if(getS < 5) {
             getMin  = getMin - getS; //分钟个位数小于5则减去个位数
         } else {
@@ -27,7 +27,7 @@ export const getXTimeData = (time) => {
         newMinTime1 = moment(minTimeFormat1).minutes(getMin).valueOf();
         newMinTimeFormat2 = moment(minTimeFormat2).minutes(getMin).format("YYYY-MM-DD HH:mm");
         newMinTime2 = moment(minTimeFormat2).minutes(getMin).valueOf();
-    } else {
+    } else { //选择时间段大于两天，分钟数取整小时
         if (getMin < 30) { //小于半小时，则分钟归零
             newMinTimeFormat1 = moment(minTimeFormat1).minutes('00').format("YYYY-MM-DD HH:mm");
             newMinTime1 = moment(minTimeFormat1).minutes('00').valueOf();

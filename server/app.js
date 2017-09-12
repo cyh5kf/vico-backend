@@ -1,17 +1,17 @@
-import Koa from 'koa';
-import cors from 'koa-cors';
-import compress from 'koa-compress';
-import json from 'koa-json';
-import send from 'koa-send';
-import koaStatic from 'koa-static';
-import logger from 'koa-logger';
-import convert from 'koa-convert';
-import artTemplate from 'koa-artTemplate';
-import bodyParser from 'koa-bodyparser';
-import path from 'path';
-import http from 'http';
-import api from './routers/api';
-import index from './routers/index';
+var Koa = require('koa'),
+  cors = require('koa-cors'),
+  compress = require('koa-compress'),
+  json = require('koa-json'),
+  send = require('koa-send'),
+  koaStatic = require('koa-static'),
+  logger = require('koa-logger'),
+  convert = require('koa-convert'),
+  artTemplate = require('koa-artTemplate'),
+  bodyParser = require('koa-bodyparser'),
+  path = require('path'),
+  http = require('http'),
+  api = require('./routers/api'),
+  index = require('./routers/index');
 
 const app = new Koa();
 

@@ -1,15 +1,35 @@
-import Sequelize from 'sequelize';
-import config from './config';
+var config = require('./config');
+var mysql = require('mysql');
 
-var db = new Sequelize(config.database, config.username, config.password, {
+var pool = mysql.createPool({
     host: config.host,
-    dialect: 'mysql',
-    port: config.port,
-    pool: {
-        max: 10,
-        min: 0,
-        idle: 10000
-    }
+    user: config.username,
+    password: config.password,
+    database: config.database,
+    connectionLimit: 10,
+    port: config.port
 });
 
-export default db;
+let query = function(sql, values) {
+
+  return new Promise((resolve, reject) => {
+    pool.getConnection(function(err, connection) {
+      if (err) {
+        resolve(err)
+      } else {
+        connection.query(sql, values, (err, results) => {
+
+          if ( err ) {
+            reject(err)
+          } else {
+            resolve(results)
+          }
+          connection.release()
+        })
+      }
+    })
+  })
+
+}
+
+module.exports = query;

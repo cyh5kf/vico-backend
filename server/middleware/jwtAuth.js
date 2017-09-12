@@ -1,6 +1,6 @@
 const jwt = require("jwt-simple");
 
-export default async(ctx, next) =>{
+module.exports = async(ctx, next) =>{
     const token = ctx.req.headers['x-access-token'];
     let email;
     if(token){

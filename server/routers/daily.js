@@ -1,13 +1,10 @@
-import moment from 'moment';
-import daily_status_model from '../models/dailyStatusModel';
-import daily_duration_model from '../models/dailyDurationModel';
+var moment = require('moment'),
+    query = require('../config/db');
 
-export const daily = async (ctx) => {
+const daily = async (ctx) => {
     let requstData = ctx.request.body;
     const {from_rc, to_rc, from_nettype, to_nettype, from_devtype, to_devtype, range_time_picker} = requstData;
     let queryCondition = {
-        from_rc: from_rc,
-        to_rc: to_rc,
         from_nettype: from_nettype,
         to_nettype: to_nettype,
         from_devtype: from_devtype,
@@ -25,76 +22,41 @@ export const daily = async (ctx) => {
     if (to_devtype === "2") { //2表示查询全部
         delete queryCondition.to_devtype;
     }
-    let promise_status = await daily_status_model.findAll({
-        order: "tstamp ASC",
-        where: Object.assign({}, queryCondition, {
-            tstamp: {
-                $between: [range_time_picker[0], range_time_picker[1]],
-            }
-        })
-    });
 
-    let promise_duration = await daily_duration_model.findAll({
-        order: "tstamp ASC",
-        where: Object.assign({}, queryCondition, {
-            tstamp: {
-                $between: [range_time_picker[0], range_time_picker[1]],
-            }
-        })
-    });
+    let _sql = `from_rc = '${from_rc}' AND to_rc = '${to_rc}'`;
+    for (let key in queryCondition) {
+        if (queryCondition.hasOwnProperty(key)) {
+            _sql += ` AND ${key} = ${queryCondition[key]}`;
+        }
+    }
 
-    let response = [promise_status, promise_duration];
+    let promise_status = query(`SELECT * FROM daily_status WHERE ${_sql} AND tstamp BETWEEN ${range_time_picker[0]} AND ${range_time_picker[1]} ORDER BY tstamp ASC`);
+
+    let promise_duration = query(`SELECT * FROM daily_duration WHERE ${_sql} AND tstamp BETWEEN ${range_time_picker[0]} AND ${range_time_picker[1]} ORDER BY tstamp ASC`);
+
+    let response = await Promise.all([promise_status, promise_duration]);
 
     ctx.body = response;
 }
 
-export const dailyAll = async (ctx) => {
+const dailyAll = async (ctx) => {
     let current_week = moment().subtract(7, 'days').valueOf();
     let now = moment().valueOf();
-    let daily_week_internal_status = await daily_status_model.findAll({
-        order: "tstamp ASC",
-        where: {
-            from_rc: '-',
-            to_rc: '-',
-            tstamp: {
-                $between: [current_week, now],
-            }
-        }
-    });
 
-    let daily_week_transnational_status = await daily_status_model.findAll({
-        order: "tstamp ASC",
-        where: {
-            from_rc: '-',
-            to_rc: '+',
-            tstamp: {
-                $between: [current_week, now],
-            }
-        }
-    });
-    let daily_week_internal_duration = await daily_duration_model.findAll({
-        order: "tstamp ASC",
-        where: {
-            from_rc: '-',
-            to_rc: '-',
-            tstamp: {
-                $between: [current_week, now],
-            }
-        }
-    });
+    let daily_week_internal_status = query(`SELECT * FROM daily_status WHERE from_rc = '-' AND to_rc = '-' AND tstamp BETWEEN ${current_week} AND ${now} ORDER BY tstamp ASC`);
 
-    let daily_week_transnational_duration = await daily_duration_model.findAll({
-        order: "tstamp ASC",
-        where: {
-            from_rc: '-',
-            to_rc: '+',
-            tstamp: {
-                $between: [current_week, now],
-            }
-        }
-    });
+    let daily_week_transnational_status = query(`SELECT * FROM daily_status WHERE from_rc = '-' AND to_rc = '+' AND tstamp BETWEEN ${current_week} AND ${now} ORDER BY tstamp ASC`);
 
-    let response = [daily_week_internal_status, daily_week_transnational_status, daily_week_internal_duration, daily_week_transnational_duration];
+    let daily_week_internal_duration = query(`SELECT * FROM daily_duration WHERE from_rc = '-' AND to_rc = '-' AND tstamp BETWEEN ${current_week} AND ${now} ORDER BY tstamp ASC`);
+
+    let daily_week_transnational_duration = query(`SELECT * FROM daily_duration WHERE from_rc = '-' AND to_rc = '+' AND tstamp BETWEEN ${current_week} AND ${now} ORDER BY tstamp ASC`);
+
+    let response = await Promise.all([daily_week_internal_status, daily_week_transnational_status, daily_week_internal_duration, daily_week_transnational_duration]);
     
     ctx.body = response;
+}
+
+module.exports = {
+    daily,
+    dailyAll
 }

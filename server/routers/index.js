@@ -1,6 +1,6 @@
-import Router from 'koa-router';
-import fs from 'fs';
-import path from 'path';
+var Router = require('koa-router'),
+  fs = require('fs'),
+  path = require('path');
 
 const index = new Router({})
 
@@ -21,4 +21,4 @@ index.get('*', async (ctx, next) => {
 });
 
 
-export default index;
+module.exports = index;

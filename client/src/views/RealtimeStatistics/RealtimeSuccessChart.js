@@ -112,7 +112,7 @@ export default class RealtimeSuccessChart extends React.Component {
         const { actions, store, refName } = this.props;
         const { queryRealtimeData } = store;
         let setOption = null;
-        var startTime = new Date();
+        console.time("success");
         if (queryRealtimeData.length === 4) {
             setOption = this.getFilterOption();
         } else {
@@ -122,9 +122,7 @@ export default class RealtimeSuccessChart extends React.Component {
                 setOption = this.getAllTransnationalOption();
             }
         }
-        var endTime = new Date();
-        var time = endTime.getTime() - startTime.getTime();
-        console.log("success:" + time);
+        console.timeEnd("success");
         return (
             <Card>
                 <Echart refName={refName} options={setOption} style={{ height: 400 }}></Echart>

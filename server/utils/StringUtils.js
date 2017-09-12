@@ -1,6 +1,6 @@
-import _ from 'underscore';
+var _ = require('underscore');
 
-export const formatJSON = (data) => {
+const formatJSON = (data) => {
     let resJSON = [];
     let item = {};
     data.forEach((val, index) => {
@@ -14,7 +14,7 @@ export const formatJSON = (data) => {
     return resJSON;
 }
 
-export const toMutiValueString=(valueList) =>{
+const toMutiValueString=(valueList) =>{
     var arr = [];
     _.forEach(valueList,function(v){
         arr.push(v);
@@ -24,7 +24,7 @@ export const toMutiValueString=(valueList) =>{
 }
 
 
-export const parseMultiValueString=(multiValueString) =>{
+const parseMultiValueString=(multiValueString) =>{
     multiValueString = multiValueString || "";
     var arr1 = multiValueString.split("#");
     var arr2 = [];
@@ -35,4 +35,10 @@ export const parseMultiValueString=(multiValueString) =>{
     });
 
     return arr2;
+}
+
+module.exports = {
+    formatJSON,
+    toMutiValueString,
+    parseMultiValueString
 }
